@@ -1,0 +1,92 @@
+#!/usr/bin/expect -f
+
+# Debug & Timeout in seconds
+#exp_internal 1
+set timeout 10
+
+### Credentials
+set serv_pass ""
+set email ""
+set email_pass ""
+
+### Set command to execute
+set command ""
+
+# SiteID list, separated by spaces
+set my_list {site01 site02 site03}
+
+# Spawn SSH 
+spawn ssh user@host
+expect "password:"
+send "$serv_pass\r"
+expect "Username:"
+send "$email\r"
+expect "Password:"
+send "$email_pass\r"
+expect "<ICARUS Tool>"
+send "\r"
+expect "<Box Options>"
+send "\r"
+expect "Box Options"
+send "\r"
+
+
+# Start looping through each item in my_list
+foreach item $my_list {
+
+    send "$item\r"
+
+    expect {
+        # use https://regexr.com as ref
+        -re {([0-9]{6}\s)} {
+            set id $expect_out(1,string)
+        }
+    }
+
+    send "$id\r"
+
+    expect {
+
+        "~ #" {
+            send "$command\r"
+            expect {
+                "~ #" {
+                    send "exit\r"
+                    expect "Pdmenu."
+                    send "\r"
+                    expect "Box Options"
+                    send "\r"
+                    }
+                }
+            }
+        "/root #" {
+            send "$command\r"
+            expect {
+                "/root #" {
+                    send "exit\r"
+                    expect "Pdmenu."
+                    send "\r"
+                    expect "Box Options"
+                    send "\r"
+                    }
+                }
+            }
+        "Pdmenu." {
+            send "\r"
+            expect "Box Options"
+            send "\r"
+                    }
+        timeout {
+            exp_continue
+            send "\x03"
+            expect "Pdmenu."
+            send "\r"
+            expect "Box Options"
+            send "\r"
+        }
+    }
+}
+
+
+send "\033\033\033\033"
+exit
