@@ -29,10 +29,7 @@ colorscheme elflord
 " Operator-pending Movement
 :onoremap p i(
 
-" Functions: Captial
-:function Diag_test()
-: echom "diag_test"
-:endfunction
 
 " Toggle Options
 :nnoremap <leader>n :setlocal number!<cr>
+:nnoremap <leader>w :setlocal wrap!<cr>
