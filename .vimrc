@@ -11,10 +11,12 @@ set hlsearch incsearch
 
 " Color Scheme
 colorscheme elflord
+syntax enable
 
 " Mappings
 :nnoremap j k
 :nnoremap k j
+
 " Leader Mappings
 :nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 :nnoremap <leader>sv :source $MYVIMRC<cr>
